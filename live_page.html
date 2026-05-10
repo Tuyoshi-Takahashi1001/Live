@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live | YOUR NAME</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0D0D0B;--surface:#141412;--surface2:#1C1C19;
+  --white:#F0EDE8;--muted:#6B6860;--accent:#C8A96E;--accent-dim:#3A3020;
+  --border:#252420;--border2:#2E2D28;
+}
+html,body{min-height:100%}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--white)}
+
+nav{display:flex;align-items:center;justify-content:space-between;padding:1.1rem 2rem;border-bottom:0.5px solid var(--border)}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.08em;color:var(--white);text-decoration:none}
+.nav-links{display:flex;gap:1.75rem;list-style:none}
+.nav-links a{font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--white)}
+
+.hero{padding:3rem 2rem 2rem;border-bottom:0.5px solid var(--border);display:flex;align-items:flex-end;justify-content:space-between}
+.hero-eyebrow{font-size:.65rem;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem;display:flex;align-items:center;gap:.5rem}
+.hero-eyebrow::before{content:'';display:block;width:20px;height:.5px;background:var(--accent)}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,8vw,5rem);letter-spacing:.04em;line-height:.95;color:var(--white)}
+.hero-title span{color:var(--accent)}
+.hero-count{font-family:'Bebas Neue',sans-serif;font-size:clamp(2rem,5vw,3rem);color:var(--accent);line-height:1;text-align:right}
+.hero-count-label{font-size:.65rem;letter-spacing:.15em;text-transform:uppercase;color:var(--muted);margin-top:.2rem;text-align:right}
+
+.filters{display:flex;gap:.5rem;padding:.85rem 2rem;border-bottom:0.5px solid var(--border);flex-wrap:wrap;align-items:center}
+.filter-btn{padding:.35rem .9rem;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);background:none;border:0.5px solid var(--border2);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+.filter-btn:hover{color:var(--white);border-color:var(--muted)}
+.filter-btn.on{background:var(--white);color:var(--bg);border-color:var(--white)}
+.yr-filter-select{margin-left:auto;padding:.35rem .65rem;font-size:.65rem;letter-spacing:.06em;background:var(--surface2);border:0.5px solid var(--border2);color:var(--white);cursor:pointer;font-family:'DM Sans',sans-serif}
+
+/* 年度アコーディオン */
+.yr-wrap{border-bottom:0.5px solid var(--border)}
+.yr-header{display:flex;align-items:center;gap:1.25rem;padding:1rem 2rem;cursor:pointer;transition:background .12s;user-select:none}
+.yr-header:hover{background:var(--surface)}
+.yr-num{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.06em;color:var(--muted);transition:color .15s;line-height:1}
+.yr-wrap.open .yr-num{color:var(--white)}
+.yr-line{flex:1;height:.5px;background:var(--border)}
+.yr-count{font-size:.65rem;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.yr-arrow{font-size:.65rem;color:var(--muted);transition:transform .25s;margin-left:.25rem}
+.yr-wrap.open .yr-arrow{transform:rotate(180deg)}
+.yr-body{max-height:0;overflow:hidden;transition:max-height .4s ease}
+.yr-wrap.open .yr-body{max-height:9999px}
+.yr-inner{padding:0 2rem .75rem}
+
+/* 共通行 */
+.live-row,.tour-row{
+  display:grid;grid-template-columns:100px 44px 1fr auto auto;
+  align-items:center;gap:1.25rem;
+  padding:.82rem 0;
+  border-bottom:0.5px solid var(--border);
+  transition:background .12s;
+}
+.live-row:hover,.tour-row:hover{background:var(--surface);margin:0 -1rem;padding-left:1rem;padding-right:1rem}
+.tour-row{cursor:pointer;user-select:none}
+.row-date{font-size:.7rem;color:var(--muted);letter-spacing:.04em;white-space:nowrap;line-height:1.6}
+.row-artist{font-size:.88rem;font-weight:500;color:var(--white)}
+.row-title{font-size:.75rem;color:var(--muted);line-height:1.4}
+.row-parts{display:flex;gap:.25rem;flex-wrap:wrap;justify-content:flex-end}
+.ptag{padding:.15rem .42rem;font-size:.57rem;letter-spacing:.06em;text-transform:uppercase;border:0.5px solid var(--accent-dim);color:var(--accent)}
+.tour-badge{font-size:.55rem;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .5rem;border:0.5px solid var(--border2);color:var(--muted);white-space:nowrap;align-self:flex-start;margin-top:.2rem}
+.tour-arrow{font-size:.6rem;color:var(--muted);transition:transform .25s;width:14px;text-align:center}
+.tour-item.open .tour-arrow{transform:rotate(180deg)}
+
+/* ツアーアコーディオン */
+.tour-item{border-bottom:0.5px solid var(--border)}
+.tour-row{border-bottom:none}
+.tour-body{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.tour-item.open .tour-body{max-height:2000px}
+.tour-legs{padding:.1rem 0 .6rem}
+.tour-leg{display:grid;grid-template-columns:100px 1fr auto;align-items:center;gap:1.25rem;padding:.48rem 0;border-bottom:0.5px solid var(--border);font-size:.75rem}
+.tour-leg:last-child{border-bottom:none}
+.leg-date{font-size:.67rem;color:var(--muted);letter-spacing:.04em}
+.leg-venue{color:var(--muted);font-size:.75rem}
+.leg-parts{display:flex;gap:.2rem;flex-wrap:wrap;justify-content:flex-end}
+
+.empty-note{padding:3rem 2rem;text-align:center;font-size:.8rem;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="#">YOUR NAME</a>
+  <ul class="nav-links">
+    <li><a href="#">Works</a></li>
+    <li><a href="#" class="active">Live</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Contact</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div>
+    <p class="hero-eyebrow">Live History</p>
+    <h1 class="hero-title">LIVE<br><span>WORKS</span></h1>
+  </div>
+  <div>
+    <div class="hero-count" id="heroCount">—</div>
+    <div class="hero-count-label">Total Shows</div>
+  </div>
+</div>
+
+<div class="filters">
+  <button class="filter-btn on" onclick="setFilter('all',this)">All</button>
+  <button class="filter-btn" onclick="setFilter('Guitar',this)">Guitar</button>
+  <button class="filter-btn" onclick="setFilter('Keyboard',this)">Keyboard</button>
+  <button class="filter-btn" onclick="setFilter('Manipulator',this)">Manipulator</button>
+  <button class="filter-btn" onclick="setFilter('Bass',this)">Bass</button>
+  <button class="filter-btn" onclick="setFilter('DJ',this)">DJ</button>
+  <button class="filter-btn" onclick="setFilter('Drums',this)">Drums</button>
+</div>
+
+<div id="listRoot"></div>
+
+<script>
+// ============================================================
+//  ★ ここにJSONを貼り付けてください ★
+//  入力ツールで「マージして生成」→「クリップボードにコピー」
+//  したものをそのまま貼り付けるだけでOKです
+// ============================================================
+const data = [
+  {date:'2025.08.17',artist:'BE:FIRST',title:'SUMMER SONIC Tokyo',parts:['Guitar','Keyboard','Manipulator']},
+  {date:'2025.08.17',artist:'MAZZEL',title:'SUMMER SONIC Tokyo',parts:['Manipulator']},
+  {date:'2025.08.10',artist:'Mega Shinnosuke',title:"Luckyfes'25",parts:['Manipulator']},
+  {date:'2025.07.21',artist:'MAZZEL',title:'NUMBER SHOT',parts:['Manipulator']},
+  {date:'2025.04.23 - 2025.08.24',artist:'MAZZEL',title:'MAZZEL 2nd One Man Tour 2025 "Royal Straight Flush"',parts:['Manipulator'],legs:[
+    {date:'2025.04.23',venue:'東京公演'},
+    {date:'2025.05.18',venue:'大阪公演'},
+    {date:'2025.06.14',venue:'名古屋公演'},
+    {date:'2025.08.24',venue:'福岡公演'}
+  ]},
+  {date:'2025.02.06',artist:'フジファブリック',title:'LIVE at NHKホール',parts:['Manipulator']},
+  {date:'2025.01.29 - 2025.03.15',artist:'7ORDER',title:'7ORDER LIVE TOUR 2025 EGG',parts:['Guitar','Manipulator'],legs:[
+    {date:'2025.01.29',venue:'東京公演'},
+    {date:'2025.02.15',venue:'大阪公演'},
+    {date:'2025.03.15',venue:'名古屋公演'}
+  ]},
+  {date:'2024.12.21 - 2025.02.02',artist:'BE:FIRST',title:'BE:FIRST DOME TOUR 2024-2025 "2:BE"',parts:['Guitar','Keyboard','Manipulator'],legs:[
+    {date:'2024.12.21',venue:'東京ドーム Day1'},
+    {date:'2024.12.22',venue:'東京ドーム Day2'},
+    {date:'2025.01.18',venue:'京セラドーム大阪'},
+    {date:'2025.02.02',venue:'バンテリンドーム名古屋'}
+  ]},
+  {date:'2024.09.15',artist:'BE:FIRST',title:'ROCK IN JAPAN FESTIVAL 2024',parts:['Keyboard','Manipulator']},
+  {date:'2024.08.18',artist:'BE:FIRST',title:'SUMMER SONIC 2024',parts:['Guitar','Bass','Keyboard','Manipulator']},
+  {date:'2024.07.23',artist:'Official髭男dism',title:'one-man live 2024 -UNOFFICIAL-',parts:['Guitar','Bass','Keyboard','Manipulator']},
+  {date:'2023.11.01 - 2024.01.27',artist:'BE:FIRST',title:'BE:FIRST ARENA TOUR 2023-2024 "Mainstream"',parts:['Guitar','Bass','Keyboard','Manipulator'],legs:[
+    {date:'2023.11.01',venue:'東京公演'},
+    {date:'2023.12.02',venue:'大阪公演'},
+    {date:'2024.01.27',venue:'福岡公演'}
+  ]},
+  {date:'2023.08.19',artist:'BE:FIRST / MAZZEL',title:'SUMMER SONIC 2023',parts:['Manipulator']},
+  {date:'2023.06.01',artist:'MAZZEL',title:'MAZZEL DEBUT SHOWCASE "Vivid"',parts:['Manipulator']},
+];
+// ============================================================
+
+let curFilter = 'all';
+let tourId = 0;
+let yrId = 0;
+
+function getStartDate(d) {
+  return (d || '').split(' - ')[0].trim();
+}
+
+function setFilter(f, btn) {
+  curFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  render();
+}
+
+function render() {
+  tourId = 0; yrId = 0;
+  const filtered = data.filter(r => {
+    if (curFilter === 'all') return true;
+    return (r.parts || []).includes(curFilter);
+  });
+
+  document.getElementById('heroCount').textContent = filtered.length;
+
+  const grouped = {};
+  filtered.forEach(r => {
+    const y = getStartDate(r.date).split('.')[0] || '----';
+    if (!grouped[y]) grouped[y] = [];
+    grouped[y].push(r);
+  });
+
+  const years = Object.keys(grouped).sort((a, b) => b.localeCompare(a));
+
+  if (!years.length) {
+    document.getElementById('listRoot').innerHTML = '<div class="empty-note">該当するライブがありません</div>';
+    return;
+  }
+
+  document.getElementById('listRoot').innerHTML = years.map((y, yi) => {
+    const items = grouped[y];
+    const isFirst = yi === 0;
+    const yid = 'yr' + (yrId++);
+    return `
+      <div class="yr-wrap ${isFirst ? 'open' : ''}" id="${yid}">
+        <div class="yr-header" onclick="toggleYr('${yid}')">
+          <span class="yr-num">${y}</span>
+          <div class="yr-line"></div>
+          <span class="yr-count">${items.length} shows</span>
+          <span class="yr-arrow">▼</span>
+        </div>
+        <div class="yr-body">
+          <div class="yr-inner">
+            ${items.map(r => renderRow(r)).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderRow(r) {
+  const isTour = r.legs && r.legs.length > 0;
+  const parts = (r.parts || []).map(p => `<span class="ptag">${p}</span>`).join('');
+
+  if (isTour) {
+    const tid = 'tw' + (tourId++);
+    const legs = r.legs.map(l => `
+      <div class="tour-leg">
+        <span class="leg-date">${dateShort(l.date)}</span>
+        <span class="leg-venue">${l.venue || ''}</span>
+        <div class="leg-parts">${(l.parts || r.parts || []).map(p => `<span class="ptag">${p}</span>`).join('')}</div>
+      </div>
+    `).join('');
+    return `
+      <div class="tour-item" id="${tid}">
+        <div class="tour-row" onclick="toggleTour(event,'${tid}')">
+          <div class="row-date">${r.date.replace(' - ', '<br>— ').replace(/-/g, '.')}</div>
+          <span class="tour-badge">Tour</span>
+          <div><div class="row-artist">${r.artist}</div><div class="row-title">${r.title}</div></div>
+          <div class="row-parts">${parts}</div>
+          <div class="tour-arrow">▼</div>
+        </div>
+        <div class="tour-body"><div class="tour-legs">${legs}</div></div>
+      </div>
+    `;
+  }
+
+  return `
+    <div class="live-row">
+      <span class="row-date">${r.date}</span>
+      <span></span>
+      <div><div class="row-artist">${r.artist}</div><div class="row-title">${r.title}</div></div>
+      <div class="row-parts">${parts}</div>
+      <span></span>
+    </div>
+  `;
+}
+
+function dateShort(d) {
+  if (!d) return '—';
+  const p = d.split('.');
+  return p.length >= 3 ? p[1] + '/' + p[2] : d;
+}
+
+function toggleYr(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+function toggleTour(e, id) {
+  e.stopPropagation();
+  document.getElementById(id).classList.toggle('open');
+}
+
+render();
+</script>
+</body>
+</html>
