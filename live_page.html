@@ -125,7 +125,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1.1rem
 //  入力ツールで「マージして生成」→「クリップボードにコピー」
 //  したものをそのまま貼り付けるだけでOKです
 // ============================================================
-[
+const data = [
   {
     "date": "2026/05/06",
     "artist": "高嶺のなでしこ",
@@ -1946,7 +1946,7 @@ nav{display:flex;align-items:center;justify-content:space-between;padding:1.1rem
       "Manipulator"
     ]
   }
-]
+];
 // ============================================================
 
 let curFilter = 'all';
@@ -1954,7 +1954,7 @@ let tourId = 0;
 let yrId = 0;
 
 function getStartDate(d) {
-  return (d || '').split(' - ')[0].trim();
+  return (d || '').split(' - ')[0].split(' – ')[0].trim();
 }
 
 function setFilter(f, btn) {
@@ -1975,7 +1975,7 @@ function render() {
 
   const grouped = {};
   filtered.forEach(r => {
-    const y = getStartDate(r.date).split('.')[0] || '----';
+    const y = getStartDate(r.date).split(/[.\/]/)[0] || '----';
     if (!grouped[y]) grouped[y] = [];
     grouped[y].push(r);
   });
