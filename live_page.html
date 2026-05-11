@@ -2010,36 +2010,14 @@ function render() {
 }
 
 function renderRow(r) {
-  const isTour = r.legs && r.legs.length > 0;
+  const isTour = r.date && r.date.includes('-') && !r.date.match(/^\d{4}\/\d{2}\/\d{2}$/);
   const parts = (r.parts || []).map(p => `<span class="ptag">${p}</span>`).join('');
-
-  if (isTour) {
-    const tid = 'tw' + (tourId++);
-    const legs = r.legs.map(l => `
-      <div class="tour-leg">
-        <span class="leg-date">${dateShort(l.date)}</span>
-        <span class="leg-venue">${l.venue || ''}</span>
-        <div class="leg-parts">${(l.parts || r.parts || []).map(p => `<span class="ptag">${p}</span>`).join('')}</div>
-      </div>
-    `).join('');
-    return `
-      <div class="tour-item" id="${tid}">
-        <div class="tour-row" onclick="toggleTour(event,'${tid}')">
-          <div class="row-date">${r.date.replace(' - ', '<br>— ').replace(/-/g, '.')}</div>
-          <span class="tour-badge">Tour</span>
-          <div><div class="row-artist">${r.artist}</div><div class="row-title">${r.title}</div></div>
-          <div class="row-parts">${parts}</div>
-          <div class="tour-arrow">▼</div>
-        </div>
-        <div class="tour-body"><div class="tour-legs">${legs}</div></div>
-      </div>
-    `;
-  }
+  const badge = isTour ? '<span class="tour-badge">Tour</span>' : '<span></span>';
 
   return `
     <div class="live-row">
-      <span class="row-date">${r.date}</span>
-      <span></span>
+      <span class="row-date">${r.date.replace(' - ', '<br>— ')}</span>
+      ${badge}
       <div><div class="row-artist">${r.artist}</div><div class="row-title">${r.title}</div></div>
       <div class="row-parts">${parts}</div>
       <span></span>
@@ -2057,10 +2035,7 @@ function toggleYr(id) {
   document.getElementById(id).classList.toggle('open');
 }
 
-function toggleTour(e, id) {
-  e.stopPropagation();
-  document.getElementById(id).classList.toggle('open');
-}
+
 
 render();
 </script>
